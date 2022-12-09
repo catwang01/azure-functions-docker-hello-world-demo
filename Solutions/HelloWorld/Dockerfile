@@ -1,8 +1,10 @@
 FROM mcr.microsoft.com/dotnet/core/sdk:2.2 AS installer-env
 
-COPY . /src/dotnet-function-app
-RUN cd /src/dotnet-function-app && \
-    mkdir -p /home/site/wwwroot && \
+WORKDIR /src/dotnet-function-app
+COPY *.csproj .
+RUN dotnet restore *.csproj
+COPY . .
+RUN mkdir -p /home/site/wwwroot && \
     dotnet publish *.csproj --output /home/site/wwwroot
 
 FROM mcr.microsoft.com/azure-functions/dotnet:2.0-arm32v7
